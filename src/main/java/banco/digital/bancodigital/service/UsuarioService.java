@@ -2,6 +2,7 @@ package banco.digital.bancodigital.service;
 
 import java.util.Optional;
 
+import banco.digital.bancodigital.error.handler.ResourseNotFoundException;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -31,8 +32,8 @@ public class UsuarioService {
     public Usuario findById(int id){
         Optional<Usuario> usuario = repository.findById(id);
 
-        if(usuario.get() == null){
-
+        if(usuario.isEmpty()){
+            throw new ResourseNotFoundException("Usuário com ID: "+ id + " não encontrado");
         }
 
         return usuario.get();

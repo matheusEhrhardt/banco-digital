@@ -1,8 +1,10 @@
 package banco.digital.bancodigital.service;
 
 import java.math.BigDecimal;
+import java.util.List;
 import java.util.Optional;
 
+import banco.digital.bancodigital.error.handler.ResourseNotFoundException;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -36,7 +38,9 @@ public class ContaService {
     public void adicionarConta(ContaDto contaDto, int idUsuario){
 
         Usuario usuario = usuarioService.findById(idUsuario);
+        contaDto.setNumero(gerarNumero());
         contaDto.setUsuario(usuario);
+        contaDto.setSaldo(new BigDecimal(0));
 
         Conta conta = converteDtoToModel(contaDto);
         repository.save(conta);
@@ -56,7 +60,7 @@ public class ContaService {
         Optional<Conta> conta = repository.findById(id);
 
         if(conta.get() == null){
-
+            throw new ResourseNotFoundException("Conta com ID: "+ id + " não encontrado");
         }
 
         return conta.get();
@@ -65,12 +69,12 @@ public class ContaService {
     //Consultar se já existe conta com o numero gerado
     public Boolean isExists(int numero){
 
-        Boolean contaExiste = false;
+        Boolean contaExiste = true;
 
-        Optional<Conta> conta = repository.findById(numero);
+        List<ContaDto> conta = repository.findContaByNumConta(numero);
 
-        if(conta.get() != null){
-            contaExiste = true;
+        if(conta.isEmpty()){
+            contaExiste = false;
         }
 
         return contaExiste;
@@ -84,11 +88,11 @@ public class ContaService {
         while(i == 0){
             numero = ( int ) ( 1000 + Math.random() * 999999 );
             i = 1;
-//            Boolean contaExiste = isExists(numero);
+            Boolean contaExiste = isExists(numero);
 
-//            if(contaExiste){
-//                i = 1;
-//            }
+            if(!contaExiste){
+                i = 1;
+            }
         }
 
         return numero;

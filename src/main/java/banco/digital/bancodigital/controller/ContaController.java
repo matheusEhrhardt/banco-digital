@@ -17,7 +17,7 @@ public class ContaController {
     @Autowired
     private ContaService service;
     
-    @PutMapping("adicionar/{idUsuario}")
+    @PutMapping("/adicionar/{idUsuario}")
     public void adicionarConta(@RequestBody ContaDto contaDto,@PathVariable int idUsuario){
      service.adicionarConta(contaDto, idUsuario);   
     }
