@@ -24,9 +24,8 @@ public class UsuarioController {
         service.atualizarCadastro(usuarioDTO, id);
     }
 
-    @GetMapping("/login/{cpfCnpj}/{senha}")
-    public ResponseEntity<Boolean> fazerLogin(@PathVariable String cpfCnpj,@PathVariable String senha){
-
+    @GetMapping("/login")
+    public ResponseEntity<Boolean> fazerLogin(@RequestParam String cpfCnpj,@RequestParam String senha){
         ResponseEntity<Boolean> acessoLiberado = service.fazerLogin(cpfCnpj,senha);
         return acessoLiberado;
     }
