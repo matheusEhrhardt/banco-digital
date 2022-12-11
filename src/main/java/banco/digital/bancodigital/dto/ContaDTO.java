@@ -4,9 +4,7 @@ import java.math.BigDecimal;
 
 import banco.digital.bancodigital.model.Usuario;
 
-public class ContaDto {
-
-    private Integer id;
+public class ContaDTO {
 
     private int numero;
 
@@ -15,14 +13,6 @@ public class ContaDto {
     private BigDecimal saldo;
 
     private String tipoConta;
-
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
 
     public int getNumero() {
         return numero;

@@ -9,7 +9,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import banco.digital.bancodigital.dto.ContaDto;
+import banco.digital.bancodigital.dto.ContaDTO;
 import banco.digital.bancodigital.model.Conta;
 import banco.digital.bancodigital.model.Usuario;
 import banco.digital.bancodigital.repository.ContaRepository;
@@ -26,7 +26,6 @@ public class ContaService {
     public void criarConta(Usuario usuario, String tipoConta){
 
         Conta conta = new Conta();
-
         conta.setNumero(gerarNumero());
         conta.setSaldo(new BigDecimal(0));
         conta.setTipoConta(tipoConta);
@@ -35,7 +34,7 @@ public class ContaService {
         repository.save(conta);
     }
 
-    public void adicionarConta(ContaDto contaDto, int idUsuario){
+    public void adicionarConta(ContaDTO contaDto, int idUsuario){
 
         Usuario usuario = usuarioService.findById(idUsuario);
         contaDto.setNumero(gerarNumero());
@@ -46,50 +45,97 @@ public class ContaService {
         repository.save(conta);
     }
 
-    public void atualizarConta(ContaDto contaDto, int id){
+    public void atualizarConta(ContaDTO contaDto, int numero){
 
-        Conta conta = findById(id);
-        contaDto.setId(id);
+        Conta conta = findContaByNumConta(numero);
 
+        if(!isExists(conta)){
+            throw new ResourseNotFoundException("Conta: " + numero + " não encontrada!");
+        }
+
+        contaDto.setNumero(numero);
         Conta contaNova = converteDtoToModel(contaDto);
         repository.save(contaNova);
 
     }
 
-    public Conta findById(int id){
-        Optional<Conta> conta = repository.findById(id);
+    public void atualizarConta(Conta conta){
+        repository.save(conta);
 
-        if(conta.get() == null){
-            throw new ResourseNotFoundException("Conta com ID: "+ id + " não encontrada");
+    }
+
+    public Conta findContaByNumero(int numero){
+        List<Conta> conta = repository.findContaByNumConta(numero);
+
+        if(isExists(conta)){
+            throw new ResourseNotFoundException("Conta: " + numero + " não encontrada!");
         }
 
-        return conta.get();
+        return conta.get(0);
     }
 
     public void depositoSaque(int numeroConta, BigDecimal valor, String operacao){
 
-        List<ContaDto> conta = repository.findContaByNumConta(numeroConta);
-        if (conta.isEmpty()){
-            throw new ResourseNotFoundException("Conta de numero: "+ numeroConta + " não encontrada");
+        Conta conta = findContaByNumConta(numeroConta);
+
+        if(!isExists(conta)){
+            throw new ResourseNotFoundException("Conta: " + numeroConta + " não encontrada!");
+        }
+        else if(operacao.equals("S") &&
+                conta.getSaldo().doubleValue() < valor.doubleValue()){
+            throw new ResourseNotFoundException("Saldo insuficiente!");
         }
 
-//        if(operacao.equals("SAQUE") &&
-//                conta.get(0).getSaldo().compareTo(valor) ){
-//
-//        }
+        BigDecimal saldoAtualizado = conta.getSaldo().add(valor);
+        conta.setSaldo(saldoAtualizado);
+
+        atualizarConta(conta);
+
+    }
+
+    public void transferir(){
+
     }
 
     public Boolean isExists(int numeroConta){
 
         Boolean contaExiste = true;
+        Conta conta = findContaByNumConta(numeroConta);
 
-        List<ContaDto> conta = repository.findContaByNumConta(numeroConta);
-
-        if(conta.isEmpty()){
+        if(!isExists(conta)){
             contaExiste = false;
         }
 
         return contaExiste;
+    }
+
+    public Boolean isExists(List<Conta> conta){
+        return !conta.isEmpty();
+    }
+
+    public Boolean isExists(Optional<Conta> conta){
+        return !conta.isEmpty();
+    }
+
+    public Boolean isExists(Conta conta){
+        return (conta != null) ? true : false;
+    }
+
+    public Conta findContaByNumConta(int numeroConta){
+
+        List<Conta> conta = repository.findContaByNumConta(numeroConta);
+
+        if(!isExists(conta)){
+            return null;
+        }
+
+        return conta.get(0);
+    }
+
+    public Boolean is(int numeroConta){
+
+        List<Conta> conta = repository.findContaByNumConta(numeroConta);
+        return isExists(conta);
     }
 
     private int gerarNumero(){
@@ -110,7 +156,7 @@ public class ContaService {
         return numero;
     }
 
-    public Conta converteDtoToModel(ContaDto contaDto){
+    public Conta converteDtoToModel(ContaDTO contaDto){
 
         Conta conta = new ModelMapper().map(contaDto, Conta.class);
         return conta;

@@ -9,12 +9,8 @@ import jakarta.persistence.*;
 public class Conta {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "ID")
-    private Integer id;
-
     @Column(name = "NUMERO")
-    private int numero;
+    private Integer numero;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name="ID_USUARIO")
@@ -26,19 +22,11 @@ public class Conta {
     @Column(name = "TIPO")
     private String tipoConta;
 
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    public int getNumero() {
+    public Integer getNumero() {
         return numero;
     }
 
-    public void setNumero(int numero) {
+    public void setNumero(Integer numero) {
         this.numero = numero;
     }
 

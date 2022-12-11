@@ -31,6 +31,12 @@ public class UsuarioService {
 
     public void cadastrarUsuario(UsuarioDTO usuarioDTO){
 
+        Usuario usuarioExistente = findUsuarioByCpfCnpj(usuarioDTO.getCpfCnpj());
+
+        if (isExists(usuarioExistente)){
+            throw new ResourseNotFoundException("Já existe usuário com CPF OU CNPJ: "+ usuarioDTO.getCpfCnpj() );
+        }
+
         Usuario usuario = converteDtoToModel(usuarioDTO);
         usuario.setSenha(encoder.encode(usuario.getSenha()));
         repository.save(usuario);
@@ -64,16 +70,26 @@ public class UsuarioService {
 
     public ResponseEntity<Boolean> fazerLogin(String cpfCnpj, String senha){
 
-        List<Usuario> usuario = repository.fazerLogin(cpfCnpj);
+        Usuario usuario = findUsuarioByCpfCnpj(cpfCnpj);
 
-        if (usuario.isEmpty()){
-            throw new ResourseNotFoundException("Usuário com CPF OU CNPJ: "+ cpfCnpj + " não encontrado");
+        if (!isExists(usuario)){
+            throw new ResourseNotFoundException("Usuário com CPF OU CNPJ: "+ cpfCnpj + "não encontrado!");
         }
 
-        Boolean acessoLiberado = encoder.matches(senha, usuario.get(0).getSenha());
+        Boolean acessoLiberado = encoder.matches(senha, usuario.getSenha());
         HttpStatus status = (acessoLiberado) ? HttpStatus.OK : HttpStatus.UNAUTHORIZED;
 
         return ResponseEntity.status(status).body(acessoLiberado);
+    }
+
+    public Usuario findUsuarioByCpfCnpj(String cpfCnpj){
+        List<Usuario> usuario = repository.findUsuarioByCpfCnpj(cpfCnpj);
+
+        if (!isExists(usuario)){
+            return null;
+        }
+
+        return usuario.get(0);
     }
 
     public Boolean isExists(int id){
@@ -87,6 +103,14 @@ public class UsuarioService {
         }
 
         return usuarioExiste;
+    }
+
+    public Boolean isExists(List<Usuario> usuarios){
+        return !usuarios.isEmpty();
+    }
+
+    public Boolean isExists(Usuario usuario){
+        return (usuario != null) ? true : false;
     }
 
     public Usuario converteDtoToModel(UsuarioDTO usuarioDTO){

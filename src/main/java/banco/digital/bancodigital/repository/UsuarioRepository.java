@@ -13,5 +13,5 @@ import java.util.List;
 public interface UsuarioRepository extends JpaRepository<Usuario,Integer> {
 
     @Query(nativeQuery = true, value = "SELECT * FROM banco_digital.usuario WHERE CPF_CNPJ = :cpfCnpj")
-    List<Usuario> fazerLogin(String cpfCnpj);
+    List<Usuario> findUsuarioByCpfCnpj(String cpfCnpj);
 }
