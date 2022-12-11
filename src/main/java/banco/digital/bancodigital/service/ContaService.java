@@ -60,18 +60,30 @@ public class ContaService {
         Optional<Conta> conta = repository.findById(id);
 
         if(conta.get() == null){
-            throw new ResourseNotFoundException("Conta com ID: "+ id + " não encontrado");
+            throw new ResourseNotFoundException("Conta com ID: "+ id + " não encontrada");
         }
 
         return conta.get();
     }
 
-    //Consultar se já existe conta com o numero gerado
-    public Boolean isExists(int numero){
+    public void depositoSaque(int numeroConta, BigDecimal valor, String operacao){
+
+        List<ContaDto> conta = repository.findContaByNumConta(numeroConta);
+        if (conta.isEmpty()){
+            throw new ResourseNotFoundException("Conta de numero: "+ numeroConta + " não encontrada");
+        }
+
+//        if(operacao.equals("SAQUE") &&
+//                conta.get(0).getSaldo().compareTo(valor) ){
+//
+//        }
+    }
+
+    public Boolean isExists(int numeroConta){
 
         Boolean contaExiste = true;
 
-        List<ContaDto> conta = repository.findContaByNumConta(numero);
+        List<ContaDto> conta = repository.findContaByNumConta(numeroConta);
 
         if(conta.isEmpty()){
             contaExiste = false;

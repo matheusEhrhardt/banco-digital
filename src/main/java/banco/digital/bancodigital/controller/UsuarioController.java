@@ -24,9 +24,9 @@ public class UsuarioController {
         service.atualizarCadastro(usuarioDTO, id);
     }
 
-    @GetMapping("/login")
-    public ResponseEntity<Boolean> fazerLogin(@RequestParam String cpfCnpj,@RequestParam String senha){
-        ResponseEntity<Boolean> acessoLiberado = service.fazerLogin(cpfCnpj,senha);
+    @PostMapping("/login")
+    public ResponseEntity<Boolean> fazerLogin(@RequestBody UsuarioDTO usuarioDTO){
+        ResponseEntity<Boolean> acessoLiberado = service.fazerLogin(usuarioDTO.getCpfCnpj(),usuarioDTO.getSenha());
         return acessoLiberado;
     }
 }
