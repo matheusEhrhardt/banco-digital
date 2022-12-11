@@ -25,11 +25,4 @@ public class ContaController {
         service.atualizarConta(contaDto, numeroConta);
     }
 
-    @GetMapping("/deposito-saque/{numeroConta}/{valor}/{operacao}")
-    public void depositoSaque(@PathVariable int numeroConta,
-                              @PathVariable BigDecimal valor,
-                              @PathVariable String operacao){
-        service.depositoSaque(numeroConta,valor,operacao);
-    }
-
 }

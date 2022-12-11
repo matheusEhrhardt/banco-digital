@@ -74,46 +74,13 @@ public class ContaService {
         return conta.get(0);
     }
 
-    public void depositoSaque(int numeroConta, BigDecimal valor, String operacao){
-
-        Conta conta = findContaByNumConta(numeroConta);
-
-        if(!isExists(conta)){
-            throw new ResourseNotFoundException("Conta: " + numeroConta + " não encontrada!");
-        }
-        else if(operacao.equals("S") &&
-                conta.getSaldo().doubleValue() < valor.doubleValue()){
-            throw new ResourseNotFoundException("Saldo insuficiente!");
-        }
-
-        BigDecimal saldoAtualizado = conta.getSaldo().add(valor);
-        conta.setSaldo(saldoAtualizado);
-
-        atualizarConta(conta);
-
-    }
-
-    public void transferir(){
-
-    }
-
     public Boolean isExists(int numeroConta){
 
-        Boolean contaExiste = true;
         Conta conta = findContaByNumConta(numeroConta);
-
-        if(!isExists(conta)){
-            contaExiste = false;
-        }
-
-        return contaExiste;
+        return isExists(conta);
     }
 
     public Boolean isExists(List<Conta> conta){
-        return !conta.isEmpty();
-    }
-
-    public Boolean isExists(Optional<Conta> conta){
         return !conta.isEmpty();
     }
 
@@ -130,12 +97,6 @@ public class ContaService {
         }
 
         return conta.get(0);
-    }
-
-    public Boolean is(int numeroConta){
-
-        List<Conta> conta = repository.findContaByNumConta(numeroConta);
-        return isExists(conta);
     }
 
     private int gerarNumero(){
