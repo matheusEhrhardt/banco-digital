@@ -56,8 +56,8 @@ public class TransacaoService {
 
         if(!contaService.isExists(contaRemetente) || !contaService.isExists(contaDestinatario)){
             throw new ResourseNotFoundException("Conta: " + transacaoDTO.numContaRemetente
-                    + "ou" + transacaoDTO.contaDestinatario
-                    +" não encontrada!");
+                    + " ou " + transacaoDTO.numContaDestinatario
+                    + " não encontrada!");
         }
         else if(contaRemetente.getSaldo().doubleValue() < transacaoDTO.valor.doubleValue()){
             throw new ResourseNotFoundException("Saldo insuficiente!");

@@ -83,13 +83,13 @@ public class UsuarioService {
     }
 
     public Usuario findUsuarioByCpfCnpj(String cpfCnpj){
-        List<Usuario> usuario = repository.findUsuarioByCpfCnpj(cpfCnpj);
+        Optional<Usuario> usuario = repository.findUsuarioByCpfCnpj(cpfCnpj);
 
         if (!isExists(usuario)){
             return null;
         }
 
-        return usuario.get(0);
+        return usuario.get();
     }
 
     public Boolean isExists(int id){
@@ -105,7 +105,7 @@ public class UsuarioService {
         return usuarioExiste;
     }
 
-    public Boolean isExists(List<Usuario> usuarios){
+    public Boolean isExists(Optional<Usuario> usuarios){
         return !usuarios.isEmpty();
     }
 

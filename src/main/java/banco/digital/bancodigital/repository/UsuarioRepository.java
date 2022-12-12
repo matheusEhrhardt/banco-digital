@@ -8,10 +8,11 @@ import org.springframework.stereotype.Repository;
 import banco.digital.bancodigital.model.Usuario;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface UsuarioRepository extends JpaRepository<Usuario,Integer> {
 
     @Query(nativeQuery = true, value = "SELECT * FROM banco_digital.usuario WHERE CPF_CNPJ = :cpfCnpj")
-    List<Usuario> findUsuarioByCpfCnpj(String cpfCnpj);
+    Optional<Usuario> findUsuarioByCpfCnpj(String cpfCnpj);
 }
