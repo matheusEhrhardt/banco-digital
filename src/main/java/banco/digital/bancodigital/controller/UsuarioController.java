@@ -1,5 +1,6 @@
 package banco.digital.bancodigital.controller;
 
+import banco.digital.bancodigital.model.Usuario;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -25,8 +26,8 @@ public class UsuarioController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<Boolean> fazerLogin(@RequestBody UsuarioDTO usuarioDTO){
-        ResponseEntity<Boolean> acessoLiberado = service.fazerLogin(usuarioDTO.getCpfCnpj(),usuarioDTO.getSenha());
-        return acessoLiberado;
+    public Usuario fazerLogin(@RequestBody UsuarioDTO usuarioDTO){
+        Usuario usuario = service.fazerLogin(usuarioDTO.getCpfCnpj(),usuarioDTO.getSenha());
+        return usuario;
     }
 }

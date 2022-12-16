@@ -68,7 +68,7 @@ public class UsuarioService {
         repository.save(usuario);
     }
 
-    public ResponseEntity<Boolean> fazerLogin(String cpfCnpj, String senha){
+    public Usuario fazerLogin(String cpfCnpj, String senha){
 
         Usuario usuario = findUsuarioByCpfCnpj(cpfCnpj);
 
@@ -77,9 +77,9 @@ public class UsuarioService {
         }
 
         Boolean acessoLiberado = encoder.matches(senha, usuario.getSenha());
-        HttpStatus status = (acessoLiberado) ? HttpStatus.OK : HttpStatus.UNAUTHORIZED;
 
-        return ResponseEntity.status(status).body(acessoLiberado);
+
+        return usuario;
     }
 
     public Usuario findUsuarioByCpfCnpj(String cpfCnpj){
