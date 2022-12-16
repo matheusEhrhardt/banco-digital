@@ -78,6 +78,9 @@ public class UsuarioService {
 
         Boolean acessoLiberado = encoder.matches(senha, usuario.getSenha());
 
+        if (!acessoLiberado){
+            throw new ResourseNotFoundException("Senha invalida!");
+        }
 
         return usuario;
     }
